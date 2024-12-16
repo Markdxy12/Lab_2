@@ -1,0 +1,123 @@
+---
+title: "Lab 2 Report"
+author: "Mark Du"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE
+)
+rm(list = ls()) 
+options(scipen = 999)
+```
+
+```{r}
+library(tidyverse)
+
+```
+
+
+```{r}
+library(nycflights13)
+
+# Filter flights with arrival delay >= 120 minutes
+long_delays <- flights %>%
+  filter(arr_delay >= 120)
+
+# Calculate the proportion
+total_flights <- nrow(flights)
+proportion_long_delays <- nrow(long_delays) / total_flights
+
+proportion_long_delays
+
+#Answer: The proportion of flights with arrival delays of 2+ hours is approximately [0.03].
+```
+
+```{r}
+houston_flights <- flights %>%
+  filter(dest %in% c("IAH", "HOU"))
+
+atlanta_flights <- flights %>%
+  filter(dest == "ATL")
+
+houston_count <- nrow(houston_flights)
+atlanta_count <- nrow(atlanta_flights)
+
+houston_count; atlanta_count
+
+#Answer: There were [9313] flights to Houston and [17215] flights to Atlanta.
+```
+
+```{r}
+delta_atl <- flights %>%
+  filter(dest == "ATL", carrier == "DL")
+
+united_at_ohare <- flights %>%
+  filter(dest == "ORD", carrier == "UA")
+
+delta_prop <- nrow(delta_atl) / nrow(flights %>% filter(dest == "ATL"))
+united_prop <- nrow(united_at_ohare) / nrow(flights %>% filter(dest == "ORD"))
+
+delta_prop; united_prop
+#Answer: Delta Airlines operated [0.6140575]% of flights to Atlanta, compared to United’s [0.4040965]% proportion at O’Hare.
+```
+```{r}
+midnight_flights <- flights %>%
+  filter(hour >= 0 & hour < 6)
+
+noon_evening_flights <- flights %>%
+  filter(hour >= 12 & hour <= 18)
+
+nrow(midnight_flights); nrow(noon_evening_flights)
+#Answer: [1954] flights departed between midnight and 6 a.m., while [152942] flights departed between noon and 6 p.m.
+```
+
+```{r}
+most_delayed <- flights %>%
+  arrange(desc(dep_delay)) %>%
+  slice(1)
+
+earliest_departure <- flights %>%
+  arrange(dep_time) %>%
+  slice(1)
+
+most_delayed; earliest_departure
+
+#Answer:
+#Most Delayed Flight is N384HA.
+#Earliest Departure Flight is N206JB.
+```
+```{r}
+flights %>%
+  select(year, month, day, year)
+#Answer: Including the same variable multiple times does not raise an error; R allows duplicate columns.
+```
+```{r}
+vars <- c("year", "month", "day", "dep_delay", "arr_delay")
+flights %>%
+  select(one_of(vars))
+#The one_of() function is useful for dynamically selecting variables based on a vector.
+```
+
+```{r}
+# For this part I did not find the dataset. Assume we have the dataset
+# called 'chicago_data'
+
+
+# Count the NA values in the 'Region' variable
+
+#code: na_region_count <- sum(is.na(chicago_data$Region))
+
+# Display the count
+#code: print(paste("Number of NA values in the 'Region' variable:",na_region_count))
+
+#Data Completeness:
+#Counting NA values helps evaluate the quality and completeness of the dataset. Missing values indicate potential issues in data collection, storage, or processing.
+
+#If the Region variable has missing values, analyses or models relying on this variable (e.g., regional trends or comparisons) may be skewed or incomplete.
+```
+
